@@ -15,7 +15,6 @@ export async function action({ request }) {
     throw new json({ message: "Unsupported mode." }, { status: 422 });
   }
 
-
   const data = await request.formData();
   console.log(data);
 
@@ -23,7 +22,6 @@ export async function action({ request }) {
     email: data.get("email"),
     password: data.get("password"),
   };
-  
 
   const response = await fetch(`http://localhost:8080/${mode}`, {
     method: "POST",
@@ -45,6 +43,10 @@ export async function action({ request }) {
   const token = resData.token;
 
   localStorage.setItem("token", token);
+
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + 1);
+  localStorage("expiration", expiration.toISOString());
 
   return redirect("/");
 }
