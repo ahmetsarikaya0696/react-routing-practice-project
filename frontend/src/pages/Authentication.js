@@ -11,15 +11,19 @@ export async function action({ request }) {
   const searchParams = new URL(request.url).searchParams;
   const mode = searchParams.get("mode");
 
-  if (mode !== "login" || mode !== "signup") {
+  if (mode !== "login" && mode !== "signup") {
     throw new json({ message: "Unsupported mode." }, { status: 422 });
   }
 
-  const data = request.formData();
+
+  const data = await request.formData();
+  console.log(data);
+
   const authData = {
     email: data.get("email"),
     password: data.get("password"),
   };
+  
 
   const response = await fetch(`http://localhost:8080/${mode}`, {
     method: "POST",
